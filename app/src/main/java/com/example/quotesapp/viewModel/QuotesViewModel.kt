@@ -1,18 +1,28 @@
 package com.example.quotesapp.viewModel
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import com.example.quotesapp.model.Quote
 import com.example.quotesapp.model.repository.QuotesRepository
 
-class QuotesViewModel(private val quotesRepository: QuotesRepository): ViewModel() {
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
-    private var quotes =  mutableStateListOf<Quote>()
-    val _quotes = quotes
 
-    fun loadQuotes(fileName:String){
-        val quoteList = quotesRepository.getQuotesFromAssets(fileName)
-        quotes.addAll(quoteList)
+class QuotesManagerViewModel(private val quotesRepository: QuotesRepository) : ViewModel() {
+
+    private val _quotes = MutableStateFlow<List<Quote>>(emptyList())
+    val quotes: StateFlow<List<Quote>> = _quotes
+
+    init {
+        loadQuotes("quotes.json")
     }
 
+    private fun loadQuotes(fileName: String) {
+        viewModelScope.launch {
+            val quoteList = quotesRepository.getQuotesFromAssets(fileName)
+            _quotes.value = quoteList
+        }
+    }
 }
