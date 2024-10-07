@@ -1,3 +1,4 @@
+
 package com.example.quotesapp
 
 import android.os.Bundle
@@ -25,3 +26,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
+
+
+
