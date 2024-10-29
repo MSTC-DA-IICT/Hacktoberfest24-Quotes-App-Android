@@ -1,3 +1,4 @@
+
 package com.example.quotesapp
 
 import android.app.Application
